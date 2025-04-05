@@ -1,11 +1,9 @@
 package domainevent.consumer;
 
-import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.jms.Queue;
 import javax.jms.TextMessage;
 
 import com.google.gson.Gson;
@@ -31,8 +29,8 @@ public class DomainEventConsumerMonitoring implements MessageListener {
             if(msg instanceof TextMessage m) {
                 String origin = m.getStringProperty(PropertiesConsumer.ORIGIN_QUEUE);
                 Event event = this.gson.fromJson(m.getText(), Event.class);
-                LOGGER.warn("Monitoreando en Cola {}, Evento Id: {}, Mensaje: {}", JMSQueueNames.AGENCY_MONITORING_ERROR_QUEUE, event.getEventId(), event.getPayload());
-                this.monitoringServices.saveError(origin, event.getEventId(), event.getPayload());
+                LOGGER.warn("Monitoreando en Cola {}, Evento Id: {}, Mensaje: {}", JMSQueueNames.AGENCY_MONITORING_ERROR_QUEUE, event.getEventId(), event.getData());
+                this.monitoringServices.saveError(origin, event.getEventId(), event.getData());
             }
         } catch (Exception e) {
             LOGGER.error("Error al recibir el mensaje: {}", e.getMessage());
