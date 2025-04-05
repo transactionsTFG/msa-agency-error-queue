@@ -3,6 +3,7 @@ package domainevent.entity;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import domainevent.converter.JsonConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,5 +42,6 @@ public class Monitoring {
     private EventId eventId;
 
     @Column(nullable = false, name = "event_data")
-    private String data;
+    @Convert(converter = JsonConverter.class)
+    private Object data;
 }

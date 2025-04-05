@@ -12,7 +12,7 @@ public class MonitoringServicesImpl implements MonitoringServices {
     private EntityManager entityManager;
 
     @Override
-    public void saveError(String queueDestination, EventId eventId, String data) {
+    public void saveError(String queueDestination, EventId eventId, Object data) {
         Monitoring monitoring = new Monitoring();
         monitoring.setQueueDestination(queueDestination);
         monitoring.setEventId(eventId);

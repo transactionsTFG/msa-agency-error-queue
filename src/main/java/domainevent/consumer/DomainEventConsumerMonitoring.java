@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 
 import domainevent.services.MonitoringServices;
 import msa.commons.consts.JMSQueueNames;
+import msa.commons.consts.PropertiesConsumer;
 import msa.commons.event.Event;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,12 +29,10 @@ public class DomainEventConsumerMonitoring implements MessageListener {
     public void onMessage(Message msg) {
          try {
             if(msg instanceof TextMessage m) {
-                String destination = "";
-                if(m.getJMSDestination() instanceof Queue queue) destination = queue.getQueueName();
-                    else destination = m.getJMSDestination().toString();
+                String origin = m.getStringProperty(PropertiesConsumer.ORIGIN_QUEUE);
                 Event event = this.gson.fromJson(m.getText(), Event.class);
                 LOGGER.warn("Monitoreando en Cola {}, Evento Id: {}, Mensaje: {}", JMSQueueNames.AGENCY_MONITORING_ERROR_QUEUE, event.getEventId(), event.getData());
-                this.monitoringServices.saveError(destination, event.getEventId(), m.getText());
+                this.monitoringServices.saveError(origin, event.getEventId(), event.getData());
             }
         } catch (Exception e) {
             LOGGER.error("Error al recibir el mensaje: {}", e.getMessage());
